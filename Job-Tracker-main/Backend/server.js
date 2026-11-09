@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
+const mongoSanitize = require('express-mongo-sanitize');
 const swaggerJsDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 require('dotenv').config();
@@ -20,6 +21,9 @@ if (process.env.NODE_ENV === 'production' && process.env.JWT_SECRET.length < 32)
 }
 
 const app = express();
+
+// Trust reverse proxy (e.g. Render, Heroku) for accurate client IP detection and rate limiting
+app.set('trust proxy', 1);
 
 // Security headers
 app.use(helmet());
@@ -42,6 +46,9 @@ app.use(cors({
 }));
 
 app.use(express.json({ limit: '10kb' }));
+
+// Sanitize user-supplied data to prevent MongoDB Operator Injection
+app.use(mongoSanitize());
 
 // ── Rate limiting ─────────────────────────────────────────────────────────────
 // Auth routes: 10 requests per 15-minute window per IP

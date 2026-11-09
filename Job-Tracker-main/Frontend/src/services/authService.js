@@ -1,30 +1,45 @@
 import Cookies from 'js-cookie';
 
 const BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+const isProduction = process.env.NODE_ENV === 'production';
 
 export const setAuthCookie = (token, user) => {
-  Cookies.set('ct_token', token, { expires: 7, sameSite: 'Lax' });
-  Cookies.set('ct_user', JSON.stringify(user), { expires: 7, sameSite: 'Lax' });
+  const cookieOptions = {
+    expires: 7,
+    sameSite: isProduction ? 'None' : 'Lax',
+    secure: isProduction,
+  };
+  Cookies.set('ct_token', token, cookieOptions);
+  Cookies.set('ct_user', JSON.stringify(user), cookieOptions);
 };
 
 export const clearAuthCookie = () => {
-  Cookies.remove('ct_token');
-  Cookies.remove('ct_user');
+  const cookieOptions = {
+    sameSite: isProduction ? 'None' : 'Lax',
+    secure: isProduction,
+  };
+  Cookies.remove('ct_token', cookieOptions);
+  Cookies.remove('ct_user', cookieOptions);
 };
 
 export const getAuthCookie = () => {
   const token = Cookies.get('ct_token');
   const userStr = Cookies.get('ct_user');
-  return {
-    token: token || null,
-    user: userStr ? JSON.parse(userStr) : null,
-  };
+  try {
+    return {
+      token: token || null,
+      user: userStr ? JSON.parse(userStr) : null,
+    };
+  } catch {
+    return { token: token || null, user: null };
+  }
 };
 
 export const login = async (email, password) => {
   const response = await fetch(`${BASE_URL}/auth/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
     body: JSON.stringify({ email, password }),
   });
   const data = await response.json();
@@ -37,6 +52,7 @@ export const register = async (name, email, password) => {
   const response = await fetch(`${BASE_URL}/auth/register`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
     body: JSON.stringify({ name, email, password }),
   });
   const data = await response.json();

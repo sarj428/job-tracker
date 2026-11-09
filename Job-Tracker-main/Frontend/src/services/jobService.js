@@ -29,17 +29,17 @@ export const getAllJobs = async (params = {}) => {
     }
   });
   const url = `${BASE_URL}/jobs${query.toString() ? `?${query}` : ''}`;
-  const response = await fetch(url, { headers: getHeaders() });
+  const response = await fetch(url, { headers: getHeaders(), credentials: 'include' });
   return handleResponse(response);
 };
 
 export const getJobStats = async () => {
-  const response = await fetch(`${BASE_URL}/jobs/stats`, { headers: getHeaders() });
+  const response = await fetch(`${BASE_URL}/jobs/stats`, { headers: getHeaders(), credentials: 'include' });
   return handleResponse(response);
 };
 
 export const getJobById = async (id) => {
-  const response = await fetch(`${BASE_URL}/jobs/${id}`, { headers: getHeaders() });
+  const response = await fetch(`${BASE_URL}/jobs/${id}`, { headers: getHeaders(), credentials: 'include' });
   return handleResponse(response);
 };
 
@@ -47,6 +47,7 @@ export const createJob = async (jobData) => {
   const response = await fetch(`${BASE_URL}/jobs`, {
     method: 'POST',
     headers: getHeaders(),
+    credentials: 'include',
     body: JSON.stringify(jobData),
   });
   return handleResponse(response);
@@ -56,6 +57,7 @@ export const updateJob = async (id, jobData) => {
   const response = await fetch(`${BASE_URL}/jobs/${id}`, {
     method: 'PATCH',
     headers: getHeaders(),
+    credentials: 'include',
     body: JSON.stringify(jobData),
   });
   return handleResponse(response);
@@ -65,6 +67,7 @@ export const deleteJob = async (id) => {
   const response = await fetch(`${BASE_URL}/jobs/${id}`, {
     method: 'DELETE',
     headers: getHeaders(),
+    credentials: 'include',
   });
   return handleResponse(response);
 };
