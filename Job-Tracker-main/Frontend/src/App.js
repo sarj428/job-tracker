@@ -58,6 +58,19 @@ const AppInner = () => {
     if (token && storedUser) setUser(storedUser);
   }, []);
 
+  // Auto-logout when any API call returns 401 (e.g. expired token)
+  useEffect(() => {
+    const onAuthLogout = () => {
+      clearAuthCookie();
+      setUser(null);
+      setTasks(EMPTY_TASKS());
+      setPagination({ total: 0, totalPages: 1 });
+      toast.error('Your session has expired. Please log in again.');
+    };
+    window.addEventListener('auth:logout', onAuthLogout);
+    return () => window.removeEventListener('auth:logout', onAuthLogout);
+  }, []);
+
   const handleLogin = (userData) => {
     setUser(userData);
     setAuthModal(false);

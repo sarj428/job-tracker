@@ -12,6 +12,11 @@ const getHeaders = () => {
 
 const handleResponse = async (response) => {
   const data = await response.json();
+  if (response.status === 401) {
+    // Dispatch a global event so App.js can clear auth state
+    window.dispatchEvent(new CustomEvent('auth:logout'));
+    throw new Error(data.message || 'Session expired. Please log in again.');
+  }
   if (!response.ok) throw new Error(data.message || 'Request failed');
   return data;
 };
