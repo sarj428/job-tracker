@@ -1,5 +1,5 @@
 import React from 'react';
-import { STATUS_COLORS, PRIORITY_COLORS } from '../utils/constants';
+// STATUS_COLORS / PRIORITY_COLORS not needed here — local badge-class maps are used instead
 
 const statusBadgeClass = {
   Saved: 'badge-saved',

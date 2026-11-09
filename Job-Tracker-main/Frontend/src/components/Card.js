@@ -1,6 +1,5 @@
 import React from 'react';
 import { useDrag } from 'react-dnd';
-import { STATUS_COLORS, PRIORITY_COLORS } from '../utils/constants';
 
 const statusBadgeClass = {
   Saved: 'badge-saved',
@@ -23,16 +22,17 @@ const fmtDate = (d) => {
 };
 
 const Card = ({ task, fromColumn, onDelete, onEdit, onView }) => {
-  if (!task) return null;
-
   const [{ isDragging }, drag] = useDrag(
     () => ({
       type: 'CARD',
       item: { task, fromColumn },
+      canDrag: !!task,
       collect: (monitor) => ({ isDragging: !!monitor.isDragging() }),
     }),
-    [task._id, fromColumn]
+    [task, fromColumn]
   );
+
+  if (!task) return null;
 
   const handleDelete = (e) => {
     e.stopPropagation();

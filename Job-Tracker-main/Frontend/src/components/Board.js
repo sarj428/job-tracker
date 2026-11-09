@@ -1,6 +1,6 @@
 import React from 'react';
 import Column from './Column';
-import { COLUMN_IDS, COLUMN_NAMES } from '../utils/constants';
+import { COLUMN_NAMES } from '../utils/constants';
 
 const Board = ({ tasks, onMoveTask, onDelete, onEdit, onView }) => {
   return (

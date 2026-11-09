@@ -3,7 +3,6 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
 import Board from './components/Board';
-import Column from './components/Column';
 import SearchFilterBar from './components/SearchFilterBar';
 import JobForm from './components/JobForm';
 import JobDetailModal from './components/JobDetailModal';
@@ -42,7 +41,6 @@ const AppInner = () => {
   const [formLoading, setFormLoading] = useState(false);
 
   // Modal state
-  const [authModal, setAuthModal]   = useState(false);
   const [authMode, setAuthMode]     = useState('login');   // 'login' | 'register'
   const [jobFormOpen, setJobFormOpen] = useState(false);
   const [editingJob, setEditingJob] = useState(null);
@@ -70,15 +68,14 @@ const AppInner = () => {
     };
     window.addEventListener('auth:logout', onAuthLogout);
     return () => window.removeEventListener('auth:logout', onAuthLogout);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleLogin = (userData) => {
     setUser(userData);
-    setAuthModal(false);
   };
   const handleRegister = (userData) => {
     setUser(userData);
-    setAuthModal(false);
     toast.success('Account created! Welcome to CareerTrack 🎉');
   };
   const handleLogout = () => {
@@ -117,6 +114,7 @@ const AppInner = () => {
     } finally {
       setLoading(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   // Reload when user or filters change (debounce search)
@@ -129,6 +127,7 @@ const AppInner = () => {
       loadJobs(filters);
     }
     return () => clearTimeout(searchTimer.current);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, filters]);
 
   // ── Filter change handler ─────────────────────────────────────────────────

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
-  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell,
+  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
 } from 'recharts';
 import { getJobStats } from '../services/jobService';
 import { STATUS_COLORS } from '../utils/constants';
@@ -55,8 +55,6 @@ const Dashboard = () => {
     if (card.key === 'offerRate') return stats.offerRate;
     return stats.byStatus[card.key] ?? 0;
   };
-
-  const maxCount = Math.max(...pipelineStatuses.map((s) => stats.byStatus[s] || 0), 1);
 
   // Build monthly chart data
   const monthlyChartData = (stats.monthly || []).map((m) => ({

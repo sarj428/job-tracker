@@ -1,10 +1,8 @@
-const mongoose = require('mongoose');
-
 /**
  * Centralized error handler middleware.
  * Produces consistent { success, message, errors? } responses.
  */
-const errorHandler = (err, req, res, next) => {
+const errorHandler = (err, req, res, _next) => {
   // Mongoose validation error
   if (err.name === 'ValidationError') {
     const errors = Object.values(err.errors).map((e) => ({
