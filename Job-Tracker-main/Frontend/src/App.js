@@ -4,7 +4,6 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 
 import Board from './components/Board';
 import Column from './components/Column';
-import Dashboard from './components/Dashboard';
 import SearchFilterBar from './components/SearchFilterBar';
 import JobForm from './components/JobForm';
 import JobDetailModal from './components/JobDetailModal';
@@ -19,6 +18,8 @@ import {
   getAllJobs, createJob, updateJob, deleteJob,
 } from './services/jobService';
 import { getAuthCookie, clearAuthCookie } from './services/authService';
+
+const Dashboard = React.lazy(() => import('./components/Dashboard'));
 
 const EMPTY_TASKS = () => {
   const t = {};
@@ -280,7 +281,14 @@ const AppInner = () => {
         {/* Main content */}
         <main className="main-content">
           {view === 'dashboard' ? (
-            <>
+            <React.Suspense
+              fallback={
+                <div className="loading-wrap">
+                  <div className="spinner" />
+                  <span>Loading dashboard…</span>
+                </div>
+              }
+            >
               <div style={{ marginBottom: 20 }}>
                 <h1 style={{ fontSize: 22, fontWeight: 700, margin: 0 }}>Dashboard</h1>
                 <p style={{ fontSize: 14, color: 'var(--text-muted)', margin: '4px 0 0' }}>
@@ -288,7 +296,7 @@ const AppInner = () => {
                 </p>
               </div>
               <Dashboard />
-            </>
+            </React.Suspense>
           ) : (
             <>
               {/* Board header */}
