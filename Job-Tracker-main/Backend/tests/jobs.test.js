@@ -1,6 +1,17 @@
 const request = require('supertest');
 const app = require('../server');
 
+describe('Health Endpoint', () => {
+  it('should return health status', async () => {
+    const res = await request(app).get('/api/health');
+    expect(res.statusCode).toBe(200);
+    expect(res.body.success).toBe(true);
+    expect(res.body.status).toBe('ok');
+    expect(res.body.db).toBeDefined();
+    expect(res.body.uptime).toBeDefined();
+  });
+});
+
 describe('Jobs Endpoints', () => {
   let token;
   const testJob = {
@@ -101,5 +112,47 @@ describe('Jobs Endpoints', () => {
     expect(res.body.stats.total).toBe(3);
     expect(res.body.stats.byStatus['Interview']).toBe(2);
     expect(res.body.stats.byStatus['Applied']).toBe(1);
+  });
+
+  it('should enforce user ownership isolation across users', async () => {
+    // User A creates a job
+    const createRes = await request(app)
+      .post('/api/jobs')
+      .set('Authorization', `Bearer ${token}`)
+      .send(testJob);
+    const userAJobId = createRes.body.job._id;
+
+    // User B registers
+    const userBRes = await request(app).post('/api/auth/register').send({
+      email: `other${Date.now()}@example.com`,
+      password: 'password123',
+    });
+    const userBToken = userBRes.body.token;
+
+    // User B cannot get User A's job
+    const getRes = await request(app)
+      .get(`/api/jobs/${userAJobId}`)
+      .set('Authorization', `Bearer ${userBToken}`);
+    expect(getRes.statusCode).toBe(404);
+
+    // User B cannot update User A's job
+    const patchRes = await request(app)
+      .patch(`/api/jobs/${userAJobId}`)
+      .set('Authorization', `Bearer ${userBToken}`)
+      .send({ status: 'Offer' });
+    expect(patchRes.statusCode).toBe(404);
+
+    // User B cannot delete User A's job
+    const deleteRes = await request(app)
+      .delete(`/api/jobs/${userAJobId}`)
+      .set('Authorization', `Bearer ${userBToken}`);
+    expect(deleteRes.statusCode).toBe(404);
+
+    // User B's list should not include User A's job
+    const listRes = await request(app)
+      .get('/api/jobs')
+      .set('Authorization', `Bearer ${userBToken}`);
+    expect(listRes.statusCode).toBe(200);
+    expect(listRes.body.jobs.length).toBe(0);
   });
 });

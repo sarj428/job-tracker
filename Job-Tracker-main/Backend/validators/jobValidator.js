@@ -18,6 +18,7 @@ const validate = (req, res, next) => {
 const VALID_STATUSES = ['Saved', 'Applied', 'Online Assessment', 'Interview', 'Offer', 'Rejected'];
 const VALID_PRIORITIES = ['Low', 'Medium', 'High'];
 const VALID_EMPLOYMENT_TYPES = ['Full Time', 'Part Time', 'Internship', 'Contract', 'Other'];
+const VALID_INTERVIEW_TYPES = ['Phone', 'Video', 'On-site', 'Technical', 'Behavioral', 'Other'];
 
 const registerRules = [
   body('email').isEmail().withMessage('A valid email is required').normalizeEmail(),
@@ -48,8 +49,10 @@ const createJobRules = [
     .withMessage(`Employment type must be one of: ${VALID_EMPLOYMENT_TYPES.join(', ')}`),
   body('jobUrl')
     .optional({ checkFalsy: true })
+    .trim()
     .isURL({ require_protocol: true })
     .withMessage('Job URL must be a valid URL (include https://)'),
+  body('salary').optional().trim().isLength({ max: 100 }).withMessage('Salary cannot exceed 100 characters'),
   body('status')
     .optional()
     .isIn(VALID_STATUSES)
@@ -60,8 +63,17 @@ const createJobRules = [
     .withMessage(`Priority must be one of: ${VALID_PRIORITIES.join(', ')}`),
   body('appliedDate').optional({ checkFalsy: true }).isISO8601().withMessage('Applied date must be a valid date'),
   body('deadline').optional({ checkFalsy: true }).isISO8601().withMessage('Deadline must be a valid date'),
-  body('notes').optional().isLength({ max: 2000 }).withMessage('Notes cannot exceed 2000 characters'),
+  body('notes').optional().trim().isLength({ max: 2000 }).withMessage('Notes cannot exceed 2000 characters'),
   body('skills').optional().isArray().withMessage('Skills must be an array'),
+  body('skills.*').optional().trim().isLength({ max: 50 }).withMessage('Individual skill names cannot exceed 50 characters'),
+  body('interview.scheduled').optional().isBoolean().withMessage('interview.scheduled must be a boolean'),
+  body('interview.date').optional({ checkFalsy: true }).isISO8601().withMessage('Interview date must be a valid date'),
+  body('interview.time').optional().trim().isLength({ max: 50 }).withMessage('Interview time cannot exceed 50 characters'),
+  body('interview.type')
+    .optional({ checkFalsy: true })
+    .isIn(VALID_INTERVIEW_TYPES)
+    .withMessage(`Interview type must be one of: ${VALID_INTERVIEW_TYPES.join(', ')}`),
+  body('interview.notes').optional().trim().isLength({ max: 1000 }).withMessage('Interview notes cannot exceed 1000 characters'),
 ];
 
 const updateJobRules = [
@@ -82,8 +94,10 @@ const updateJobRules = [
     .withMessage(`Employment type must be one of: ${VALID_EMPLOYMENT_TYPES.join(', ')}`),
   body('jobUrl')
     .optional({ checkFalsy: true })
+    .trim()
     .isURL({ require_protocol: true })
     .withMessage('Job URL must be a valid URL (include https://)'),
+  body('salary').optional().trim().isLength({ max: 100 }).withMessage('Salary cannot exceed 100 characters'),
   body('status')
     .optional()
     .isIn(VALID_STATUSES)
@@ -94,8 +108,17 @@ const updateJobRules = [
     .withMessage(`Priority must be one of: ${VALID_PRIORITIES.join(', ')}`),
   body('appliedDate').optional({ checkFalsy: true }).isISO8601().withMessage('Applied date must be a valid date'),
   body('deadline').optional({ checkFalsy: true }).isISO8601().withMessage('Deadline must be a valid date'),
-  body('notes').optional().isLength({ max: 2000 }).withMessage('Notes cannot exceed 2000 characters'),
+  body('notes').optional().trim().isLength({ max: 2000 }).withMessage('Notes cannot exceed 2000 characters'),
   body('skills').optional().isArray().withMessage('Skills must be an array'),
+  body('skills.*').optional().trim().isLength({ max: 50 }).withMessage('Individual skill names cannot exceed 50 characters'),
+  body('interview.scheduled').optional().isBoolean().withMessage('interview.scheduled must be a boolean'),
+  body('interview.date').optional({ checkFalsy: true }).isISO8601().withMessage('Interview date must be a valid date'),
+  body('interview.time').optional().trim().isLength({ max: 50 }).withMessage('Interview time cannot exceed 50 characters'),
+  body('interview.type')
+    .optional({ checkFalsy: true })
+    .isIn(VALID_INTERVIEW_TYPES)
+    .withMessage(`Interview type must be one of: ${VALID_INTERVIEW_TYPES.join(', ')}`),
+  body('interview.notes').optional().trim().isLength({ max: 1000 }).withMessage('Interview notes cannot exceed 1000 characters'),
 ];
 
 module.exports = {

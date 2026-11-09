@@ -50,6 +50,7 @@ describe('Auth Endpoints', () => {
   it('should fail to access protected route without token', async () => {
     const res = await request(app).get('/api/auth/me');
     expect(res.statusCode).toBe(401);
+    expect(res.body.success).toBe(false);
     expect(res.body.message).toBe('Please authenticate');
   });
 
