@@ -1,0 +1,74 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  backend:
+    name: Backend (Node.js 20)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Job-Tracker-main/Backend
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: Job-Tracker-main/Backend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint check
+        run: npm run lint
+
+      - name: Format check
+        run: npm run format:check
+
+      - name: Run tests & coverage
+        run: npm run test:coverage
+        env:
+          JWT_SECRET: test-jwt-secret-min-32-chars-long-example
+          NODE_ENV: test
+
+  frontend:
+    name: Frontend (Node.js 20)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Job-Tracker-main/Frontend
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: Job-Tracker-main/Frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint check
+        run: npm run lint
+
+      - name: Format check
+        run: npm run format:check
+
+      - name: Run tests & coverage
+        run: npm run test:coverage
+
+      - name: Build production bundle
+        run: npm run build
+        env:
+          REACT_APP_API_URL: http://localhost:5000/api
