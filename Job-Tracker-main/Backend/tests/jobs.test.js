@@ -69,6 +69,54 @@ describe('Jobs Endpoints', () => {
     expect(res.body.totalPages).toBe(2);
   });
 
+  it('should filter jobs by status, priority, and search', async () => {
+    await request(app).post('/api/jobs').set('Authorization', `Bearer ${token}`).send({
+      ...testJob,
+      companyName: 'Stripe',
+      jobTitle: 'Backend Engineer',
+      status: 'Interview',
+      priority: 'High',
+    });
+    await request(app).post('/api/jobs').set('Authorization', `Bearer ${token}`).send({
+      ...testJob,
+      companyName: 'Google',
+      jobTitle: 'Frontend Engineer',
+      status: 'Saved',
+      priority: 'Low',
+    });
+    await request(app).post('/api/jobs').set('Authorization', `Bearer ${token}`).send({
+      ...testJob,
+      companyName: 'Meta',
+      jobTitle: 'ML Engineer',
+      status: 'Applied',
+      priority: 'Medium',
+    });
+
+    // Filter by status
+    const statusRes = await request(app).get('/api/jobs?status=Interview').set('Authorization', `Bearer ${token}`);
+    expect(statusRes.statusCode).toBe(200);
+    expect(statusRes.body.jobs.length).toBe(1);
+    expect(statusRes.body.jobs[0].companyName).toBe('Stripe');
+
+    // Filter by priority
+    const priorityRes = await request(app).get('/api/jobs?priority=Low').set('Authorization', `Bearer ${token}`);
+    expect(priorityRes.statusCode).toBe(200);
+    expect(priorityRes.body.jobs.length).toBe(1);
+    expect(priorityRes.body.jobs[0].companyName).toBe('Google');
+
+    // Search by companyName
+    const searchRes = await request(app).get('/api/jobs?search=met').set('Authorization', `Bearer ${token}`);
+    expect(searchRes.statusCode).toBe(200);
+    expect(searchRes.body.jobs.length).toBe(1);
+    expect(searchRes.body.jobs[0].companyName).toBe('Meta');
+
+    // Search by jobTitle
+    const titleRes = await request(app).get('/api/jobs?search=backend').set('Authorization', `Bearer ${token}`);
+    expect(titleRes.statusCode).toBe(200);
+    expect(titleRes.body.jobs.length).toBe(1);
+    expect(titleRes.body.jobs[0].companyName).toBe('Stripe');
+  });
+
   it('should update a job', async () => {
     const createRes = await request(app)
       .post('/api/jobs')
