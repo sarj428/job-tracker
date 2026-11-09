@@ -88,37 +88,23 @@ async function runBenchmark() {
     .explain('executionStats');
   const stats2No = q2NoIdx.executionStats;
 
-  console.log('\n=== REAL MEASURED BENCHMARK RESULTS ===\n');
+  console.log('\n=== REAL MEASURED BENCHMARK RESULTS ===');
+  console.log('NOTE: Headline metric is docsExamined / keysExamined (deterministic database work).');
+  console.log('Execution times reflect an in-memory MongoDB runner on a local machine and are subject to runtime noise.\n');
 
-  console.log('--- Query 1: { user, status: "Applied" } ---');
-  console.log('WITHOUT index:');
-  console.log(`  Stage:            ${stats1No.executionStages.stage}`);
-  console.log(`  nReturned:        ${stats1No.nReturned}`);
-  console.log(`  docsExamined:     ${stats1No.totalDocsExamined}`);
-  console.log(`  keysExamined:     ${stats1No.totalKeysExamined}`);
-  console.log(`  executionTimeMs:  ${stats1No.executionTimeMillis} ms`);
+  console.log('--- Query 1: Filter by user + status ({ user, status: "Applied" }) ---');
+  console.log('  HEADLINE METRIC:');
+  console.log(`    WITHOUT index: docsExamined = ${stats1No.totalDocsExamined} (COLLSCAN), keysExamined = ${stats1No.totalKeysExamined}`);
+  console.log(`    WITH index:    docsExamined = ${stats1With.totalDocsExamined} (FETCH), keysExamined = ${stats1With.totalKeysExamined} (${Math.round(stats1No.totalDocsExamined / stats1With.totalDocsExamined)}x reduction)`);
+  console.log('  Secondary (timings):');
+  console.log(`    WITHOUT index: ${stats1No.executionTimeMillis} ms | WITH index: ${stats1With.executionTimeMillis} ms\n`);
 
-  console.log('WITH compound index { user: 1, status: 1 }:');
-  console.log(`  Stage:            ${stats1With.executionStages.stage}`);
-  console.log(`  nReturned:        ${stats1With.nReturned}`);
-  console.log(`  docsExamined:     ${stats1With.totalDocsExamined}`);
-  console.log(`  keysExamined:     ${stats1With.totalKeysExamined}`);
-  console.log(`  executionTimeMs:  ${stats1With.executionTimeMillis} ms`);
-
-  console.log('\n--- Query 2: { user } sort { createdAt: -1 } limit 20 ---');
-  console.log('WITHOUT index:');
-  console.log(`  Stage:            ${stats2No.executionStages.stage}`);
-  console.log(`  nReturned:        ${stats2No.nReturned}`);
-  console.log(`  docsExamined:     ${stats2No.totalDocsExamined}`);
-  console.log(`  keysExamined:     ${stats2No.totalKeysExamined}`);
-  console.log(`  executionTimeMs:  ${stats2No.executionTimeMillis} ms`);
-
-  console.log('WITH compound index { user: 1, createdAt: -1 }:');
-  console.log(`  Stage:            ${stats2With.executionStages.stage}`);
-  console.log(`  nReturned:        ${stats2With.nReturned}`);
-  console.log(`  docsExamined:     ${stats2With.totalDocsExamined}`);
-  console.log(`  keysExamined:     ${stats2With.totalKeysExamined}`);
-  console.log(`  executionTimeMs:  ${stats2With.executionTimeMillis} ms`);
+  console.log('--- Query 2: Filter by user + sort by createdAt desc + limit 20 ---');
+  console.log('  HEADLINE METRIC:');
+  console.log(`    WITHOUT index: docsExamined = ${stats2No.totalDocsExamined} (SORT stage), keysExamined = ${stats2No.totalKeysExamined}`);
+  console.log(`    WITH index:    docsExamined = ${stats2With.totalDocsExamined} (LIMIT stage), keysExamined = ${stats2With.totalKeysExamined} (${Math.round(stats2No.totalDocsExamined / stats2With.totalDocsExamined)}x reduction)`);
+  console.log('  Secondary (timings):');
+  console.log(`    WITHOUT index: ${stats2No.executionTimeMillis} ms | WITH index: ${stats2With.executionTimeMillis} ms\n`);
 
   await mongoose.disconnect();
   await mongoServer.stop();
@@ -133,3 +119,4 @@ if (require.main === module) {
 }
 
 module.exports = runBenchmark;
+
