@@ -8,6 +8,7 @@
     "test": "jest",
     "test:coverage": "jest --coverage",
     "benchmark": "node scripts/benchmark.js",
+    "seed:demo": "node scripts/seedDemo.js",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format:check": "prettier --check .",
