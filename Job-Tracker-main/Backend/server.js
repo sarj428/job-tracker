@@ -33,17 +33,19 @@ const allowedOrigins = process.env.ALLOWED_ORIGINS
   ? process.env.ALLOWED_ORIGINS.split(',').map((o) => o.trim())
   : ['http://localhost:3000'];
 
-app.use(cors({
-  origin: (origin, callback) => {
-    // Allow requests with no origin (e.g. Postman, mobile apps)
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error(`CORS: origin ${origin} is not allowed`));
-    }
-  },
-  credentials: true,
-}));
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      // Allow requests with no origin (e.g. Postman, mobile apps)
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error(`CORS: origin ${origin} is not allowed`));
+      }
+    },
+    credentials: true,
+  })
+);
 
 app.use(express.json({ limit: '10kb' }));
 
@@ -138,7 +140,9 @@ app.use(errorHandler);
 if (require.main === module) {
   const PORT = process.env.PORT || 5000;
   app.listen(PORT, () => {
-    console.log(`CareerTrack API running on port ${PORT} [${process.env.NODE_ENV || 'development'}]`);
+    console.log(
+      `CareerTrack API running on port ${PORT} [${process.env.NODE_ENV || 'development'}]`
+    );
   });
 }
 

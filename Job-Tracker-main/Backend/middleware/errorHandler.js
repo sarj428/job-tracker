@@ -20,7 +20,9 @@ const errorHandler = (err, req, res, _next) => {
   // MongoDB duplicate key (e.g. duplicate email)
   if (err.code === 11000) {
     const field = Object.keys(err.keyValue || {})[0] || 'field';
-    return res.status(409).json({ success: false, message: `A record with this ${field} already exists` });
+    return res
+      .status(409)
+      .json({ success: false, message: `A record with this ${field} already exists` });
   }
 
   // JWT errors

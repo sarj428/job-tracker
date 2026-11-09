@@ -59,10 +59,12 @@ describe('Auth Endpoints', () => {
   });
 
   it('should reject NoSQL operator injection attempt on login with 4xx', async () => {
-    const res = await request(app).post('/api/auth/login').send({
-      email: { $ne: null },
-      password: 'x',
-    });
+    const res = await request(app)
+      .post('/api/auth/login')
+      .send({
+        email: { $ne: null },
+        password: 'x',
+      });
     expect(res.statusCode).toBeGreaterThanOrEqual(400);
     expect(res.statusCode).toBeLessThan(500);
     expect(res.body.success).toBe(false);

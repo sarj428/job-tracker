@@ -13,9 +13,7 @@ import ConfirmDialog from './components/ConfirmDialog';
 import { ToastProvider, useToast } from './components/ToastProvider';
 
 import { COLUMN_NAMES } from './utils/constants';
-import {
-  getAllJobs, createJob, updateJob, deleteJob,
-} from './services/jobService';
+import { getAllJobs, createJob, updateJob, deleteJob } from './services/jobService';
 import { getAuthCookie, clearAuthCookie } from './services/authService';
 
 const Dashboard = React.lazy(() => import('./components/Dashboard'));
@@ -26,25 +24,32 @@ const EMPTY_TASKS = () => {
   return t;
 };
 
-const DEFAULT_FILTERS = { search: '', status: '', priority: '', employmentType: '', sort: 'newest', page: 1 };
+const DEFAULT_FILTERS = {
+  search: '',
+  status: '',
+  priority: '',
+  employmentType: '',
+  sort: 'newest',
+  page: 1,
+};
 
 // ─── Inner app — has access to toast context ───────────────────────────────
 const AppInner = () => {
   const toast = useToast();
 
-  const [user, setUser]             = useState(null);
-  const [view, setView]             = useState('board');   // 'board' | 'dashboard'
-  const [tasks, setTasks]           = useState(EMPTY_TASKS());
-  const [filters, setFilters]       = useState(DEFAULT_FILTERS);
+  const [user, setUser] = useState(null);
+  const [view, setView] = useState('board'); // 'board' | 'dashboard'
+  const [tasks, setTasks] = useState(EMPTY_TASKS());
+  const [filters, setFilters] = useState(DEFAULT_FILTERS);
   const [pagination, setPagination] = useState({ total: 0, totalPages: 1 });
-  const [loading, setLoading]       = useState(false);
+  const [loading, setLoading] = useState(false);
   const [formLoading, setFormLoading] = useState(false);
 
   // Modal state
-  const [authMode, setAuthMode]     = useState('login');   // 'login' | 'register'
+  const [authMode, setAuthMode] = useState('login'); // 'login' | 'register'
   const [jobFormOpen, setJobFormOpen] = useState(false);
   const [editingJob, setEditingJob] = useState(null);
-  const [detailJob, setDetailJob]   = useState(null);
+  const [detailJob, setDetailJob] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
 
@@ -86,36 +91,39 @@ const AppInner = () => {
   };
 
   // ── Load jobs ─────────────────────────────────────────────────────────────
-  const loadJobs = useCallback(async (f = filters) => {
-    if (!user) return;
-    setLoading(true);
-    try {
-      const res = await getAllJobs({
-        page: f.page,
-        limit: 20,
-        status: f.status,
-        priority: f.priority,
-        employmentType: f.employmentType,
-        search: f.search,
-        sort: f.sort,
-      });
+  const loadJobs = useCallback(
+    async (f = filters) => {
+      if (!user) return;
+      setLoading(true);
+      try {
+        const res = await getAllJobs({
+          page: f.page,
+          limit: 20,
+          status: f.status,
+          priority: f.priority,
+          employmentType: f.employmentType,
+          search: f.search,
+          sort: f.sort,
+        });
 
-      // If a status filter is active, keep only that column populated
-      const newTasks = EMPTY_TASKS();
-      res.jobs.forEach((job) => {
-        if (newTasks[job.status] !== undefined) {
-          newTasks[job.status].push(job);
-        }
-      });
-      setTasks(newTasks);
-      setPagination({ total: res.total, totalPages: res.totalPages });
-    } catch (err) {
-      toast.error('Failed to load applications.');
-    } finally {
-      setLoading(false);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user]);
+        // If a status filter is active, keep only that column populated
+        const newTasks = EMPTY_TASKS();
+        res.jobs.forEach((job) => {
+          if (newTasks[job.status] !== undefined) {
+            newTasks[job.status].push(job);
+          }
+        });
+        setTasks(newTasks);
+        setPagination({ total: res.total, totalPages: res.totalPages });
+      } catch (err) {
+        toast.error('Failed to load applications.');
+      } finally {
+        setLoading(false);
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    },
+    [user]
+  );
 
   // Reload when user or filters change (debounce search)
   useEffect(() => {
@@ -220,15 +228,9 @@ const AppInner = () => {
             <span className="auth-logo-name">CareerTrack</span>
           </div>
           {authMode === 'login' ? (
-            <LoginForm
-              onLogin={handleLogin}
-              switchToRegister={() => setAuthMode('register')}
-            />
+            <LoginForm onLogin={handleLogin} switchToRegister={() => setAuthMode('register')} />
           ) : (
-            <RegisterForm
-              onRegister={handleRegister}
-              switchToLogin={() => setAuthMode('login')}
-            />
+            <RegisterForm onRegister={handleRegister} switchToLogin={() => setAuthMode('login')} />
           )}
         </div>
       </div>
@@ -299,7 +301,14 @@ const AppInner = () => {
           ) : (
             <>
               {/* Board header */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18 }}>
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  marginBottom: 18,
+                }}
+              >
                 <div>
                   <h1 style={{ fontSize: 22, fontWeight: 700, margin: 0 }}>Applications</h1>
                   <p style={{ fontSize: 14, color: 'var(--text-muted)', margin: '4px 0 0' }}>
@@ -309,7 +318,10 @@ const AppInner = () => {
                 <button
                   id="add-job-btn"
                   className="btn btn-primary"
-                  onClick={() => { setEditingJob(null); setJobFormOpen(true); }}
+                  onClick={() => {
+                    setEditingJob(null);
+                    setJobFormOpen(true);
+                  }}
                 >
                   + Add Application
                 </button>
@@ -328,7 +340,8 @@ const AppInner = () => {
                   <div className="spinner" />
                   <span>Loading applications…</span>
                 </div>
-              ) : pagination.total === 0 && (filters.search || filters.status || filters.priority || filters.employmentType) ? (
+              ) : pagination.total === 0 &&
+                (filters.search || filters.status || filters.priority || filters.employmentType) ? (
                 <div className="empty-state">
                   <div className="empty-icon">🔍</div>
                   <div className="empty-title">No results found</div>
@@ -341,7 +354,10 @@ const AppInner = () => {
                   <div className="empty-desc">Add your first job application to get started.</div>
                   <button
                     className="btn btn-primary"
-                    onClick={() => { setEditingJob(null); setJobFormOpen(true); }}
+                    onClick={() => {
+                      setEditingJob(null);
+                      setJobFormOpen(true);
+                    }}
                   >
                     + Add your first application
                   </button>
@@ -395,14 +411,20 @@ const AppInner = () => {
       {/* ─── Job form modal (create / edit) ─────────────────────────────── */}
       <Modal
         isOpen={jobFormOpen}
-        onClose={() => { setJobFormOpen(false); setEditingJob(null); }}
+        onClose={() => {
+          setJobFormOpen(false);
+          setEditingJob(null);
+        }}
         title={editingJob ? 'Edit Application' : 'Add Application'}
         size="lg"
       >
         <JobForm
           initialData={editingJob}
           onSubmit={editingJob ? handleEditJob : handleCreateJob}
-          onClose={() => { setJobFormOpen(false); setEditingJob(null); }}
+          onClose={() => {
+            setJobFormOpen(false);
+            setEditingJob(null);
+          }}
           loading={formLoading}
         />
       </Modal>

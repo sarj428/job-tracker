@@ -39,7 +39,9 @@ const RegisterForm = ({ onRegister, switchToLogin }) => {
 
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label className="form-label" htmlFor="reg-name">Name (optional)</label>
+          <label className="form-label" htmlFor="reg-name">
+            Name (optional)
+          </label>
           <input
             id="reg-name"
             className="form-input"
@@ -51,7 +53,9 @@ const RegisterForm = ({ onRegister, switchToLogin }) => {
           />
         </div>
         <div className="form-group">
-          <label className="form-label" htmlFor="reg-email">Email</label>
+          <label className="form-label" htmlFor="reg-email">
+            Email
+          </label>
           <input
             id="reg-email"
             className="form-input"
@@ -64,7 +68,9 @@ const RegisterForm = ({ onRegister, switchToLogin }) => {
           />
         </div>
         <div className="form-group">
-          <label className="form-label" htmlFor="reg-password">Password</label>
+          <label className="form-label" htmlFor="reg-password">
+            Password
+          </label>
           <input
             id="reg-password"
             className="form-input"
@@ -77,7 +83,9 @@ const RegisterForm = ({ onRegister, switchToLogin }) => {
           />
         </div>
         <div className="form-group">
-          <label className="form-label" htmlFor="reg-confirm">Confirm password</label>
+          <label className="form-label" htmlFor="reg-confirm">
+            Confirm password
+          </label>
           <input
             id="reg-confirm"
             className="form-input"

@@ -34,12 +34,18 @@ export const getAllJobs = async (params = {}) => {
 };
 
 export const getJobStats = async () => {
-  const response = await fetch(`${BASE_URL}/jobs/stats`, { headers: getHeaders(), credentials: 'include' });
+  const response = await fetch(`${BASE_URL}/jobs/stats`, {
+    headers: getHeaders(),
+    credentials: 'include',
+  });
   return handleResponse(response);
 };
 
 export const getJobById = async (id) => {
-  const response = await fetch(`${BASE_URL}/jobs/${id}`, { headers: getHeaders(), credentials: 'include' });
+  const response = await fetch(`${BASE_URL}/jobs/${id}`, {
+    headers: getHeaders(),
+    credentials: 'include',
+  });
   return handleResponse(response);
 };
 

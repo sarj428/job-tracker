@@ -1,4 +1,11 @@
-export const JOB_STATUSES = ['Saved', 'Applied', 'Online Assessment', 'Interview', 'Offer', 'Rejected'];
+export const JOB_STATUSES = [
+  'Saved',
+  'Applied',
+  'Online Assessment',
+  'Interview',
+  'Offer',
+  'Rejected',
+];
 
 export const COLUMN_IDS = {
   SAVED: 'Saved',

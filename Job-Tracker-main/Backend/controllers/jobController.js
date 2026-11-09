@@ -161,8 +161,19 @@ const getJobById = async (req, res, next) => {
 const createJob = async (req, res, next) => {
   try {
     const {
-      companyName, jobTitle, location, employmentType, jobUrl,
-      salary, status, priority, appliedDate, deadline, notes, skills, interview,
+      companyName,
+      jobTitle,
+      location,
+      employmentType,
+      jobUrl,
+      salary,
+      status,
+      priority,
+      appliedDate,
+      deadline,
+      notes,
+      skills,
+      interview,
     } = req.body;
 
     const job = new Job({
@@ -200,8 +211,19 @@ const updateJob = async (req, res, next) => {
     }
 
     const updatableFields = [
-      'companyName', 'jobTitle', 'location', 'employmentType', 'jobUrl',
-      'salary', 'status', 'priority', 'appliedDate', 'deadline', 'notes', 'skills', 'interview',
+      'companyName',
+      'jobTitle',
+      'location',
+      'employmentType',
+      'jobUrl',
+      'salary',
+      'status',
+      'priority',
+      'appliedDate',
+      'deadline',
+      'notes',
+      'skills',
+      'interview',
     ];
 
     updatableFields.forEach((field) => {

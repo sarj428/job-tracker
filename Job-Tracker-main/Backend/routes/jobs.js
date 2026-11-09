@@ -2,7 +2,12 @@ const express = require('express');
 const router = express.Router();
 const auth = require('../middleware/auth');
 const {
-  getJobs, getJobStats, getJobById, createJob, updateJob, deleteJob,
+  getJobs,
+  getJobStats,
+  getJobById,
+  createJob,
+  updateJob,
+  deleteJob,
 } = require('../controllers/jobController');
 const { createJobRules, updateJobRules, validate } = require('../validators/jobValidator');
 

@@ -25,10 +25,12 @@ describe('Jobs Endpoints', () => {
 
   beforeEach(async () => {
     // Register and get token for each test
-    const res = await request(app).post('/api/auth/register').send({
-      email: `test${Date.now()}@example.com`,
-      password: 'password123',
-    });
+    const res = await request(app)
+      .post('/api/auth/register')
+      .send({
+        email: `test${Date.now()}@example.com`,
+        password: 'password123',
+      });
     token = res.body.token;
   });
 
@@ -52,8 +54,8 @@ describe('Jobs Endpoints', () => {
 
     expect(res.statusCode).toBe(422);
     expect(res.body.success).toBe(false);
-    expect(res.body.errors.some(e => e.field === 'companyName')).toBe(true);
-    expect(res.body.errors.some(e => e.field === 'jobTitle')).toBe(true);
+    expect(res.body.errors.some((e) => e.field === 'companyName')).toBe(true);
+    expect(res.body.errors.some((e) => e.field === 'jobTitle')).toBe(true);
   });
 
   it('should get all jobs with pagination', async () => {
@@ -61,7 +63,9 @@ describe('Jobs Endpoints', () => {
     await request(app).post('/api/jobs').set('Authorization', `Bearer ${token}`).send(testJob);
     await request(app).post('/api/jobs').set('Authorization', `Bearer ${token}`).send(testJob);
 
-    const res = await request(app).get('/api/jobs?page=1&limit=1').set('Authorization', `Bearer ${token}`);
+    const res = await request(app)
+      .get('/api/jobs?page=1&limit=1')
+      .set('Authorization', `Bearer ${token}`);
     expect(res.statusCode).toBe(200);
     expect(res.body.success).toBe(true);
     expect(res.body.jobs.length).toBe(1);
@@ -70,48 +74,65 @@ describe('Jobs Endpoints', () => {
   });
 
   it('should filter jobs by status, priority, and search', async () => {
-    await request(app).post('/api/jobs').set('Authorization', `Bearer ${token}`).send({
-      ...testJob,
-      companyName: 'Stripe',
-      jobTitle: 'Backend Engineer',
-      status: 'Interview',
-      priority: 'High',
-    });
-    await request(app).post('/api/jobs').set('Authorization', `Bearer ${token}`).send({
-      ...testJob,
-      companyName: 'Google',
-      jobTitle: 'Frontend Engineer',
-      status: 'Saved',
-      priority: 'Low',
-    });
-    await request(app).post('/api/jobs').set('Authorization', `Bearer ${token}`).send({
-      ...testJob,
-      companyName: 'Meta',
-      jobTitle: 'ML Engineer',
-      status: 'Applied',
-      priority: 'Medium',
-    });
+    await request(app)
+      .post('/api/jobs')
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        ...testJob,
+        companyName: 'Stripe',
+        jobTitle: 'Backend Engineer',
+        status: 'Interview',
+        priority: 'High',
+      });
+    await request(app)
+      .post('/api/jobs')
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        ...testJob,
+        companyName: 'Google',
+        jobTitle: 'Frontend Engineer',
+        status: 'Saved',
+        priority: 'Low',
+      });
+    await request(app)
+      .post('/api/jobs')
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        ...testJob,
+        companyName: 'Meta',
+        jobTitle: 'ML Engineer',
+        status: 'Applied',
+        priority: 'Medium',
+      });
 
     // Filter by status
-    const statusRes = await request(app).get('/api/jobs?status=Interview').set('Authorization', `Bearer ${token}`);
+    const statusRes = await request(app)
+      .get('/api/jobs?status=Interview')
+      .set('Authorization', `Bearer ${token}`);
     expect(statusRes.statusCode).toBe(200);
     expect(statusRes.body.jobs.length).toBe(1);
     expect(statusRes.body.jobs[0].companyName).toBe('Stripe');
 
     // Filter by priority
-    const priorityRes = await request(app).get('/api/jobs?priority=Low').set('Authorization', `Bearer ${token}`);
+    const priorityRes = await request(app)
+      .get('/api/jobs?priority=Low')
+      .set('Authorization', `Bearer ${token}`);
     expect(priorityRes.statusCode).toBe(200);
     expect(priorityRes.body.jobs.length).toBe(1);
     expect(priorityRes.body.jobs[0].companyName).toBe('Google');
 
     // Search by companyName
-    const searchRes = await request(app).get('/api/jobs?search=met').set('Authorization', `Bearer ${token}`);
+    const searchRes = await request(app)
+      .get('/api/jobs?search=met')
+      .set('Authorization', `Bearer ${token}`);
     expect(searchRes.statusCode).toBe(200);
     expect(searchRes.body.jobs.length).toBe(1);
     expect(searchRes.body.jobs[0].companyName).toBe('Meta');
 
     // Search by jobTitle
-    const titleRes = await request(app).get('/api/jobs?search=backend').set('Authorization', `Bearer ${token}`);
+    const titleRes = await request(app)
+      .get('/api/jobs?search=backend')
+      .set('Authorization', `Bearer ${token}`);
     expect(titleRes.statusCode).toBe(200);
     expect(titleRes.body.jobs.length).toBe(1);
     expect(titleRes.body.jobs[0].companyName).toBe('Stripe');
@@ -146,14 +167,25 @@ describe('Jobs Endpoints', () => {
 
     expect(res.statusCode).toBe(200);
 
-    const getRes = await request(app).get(`/api/jobs/${jobId}`).set('Authorization', `Bearer ${token}`);
+    const getRes = await request(app)
+      .get(`/api/jobs/${jobId}`)
+      .set('Authorization', `Bearer ${token}`);
     expect(getRes.statusCode).toBe(404);
   });
 
   it('should get job stats', async () => {
-    await request(app).post('/api/jobs').set('Authorization', `Bearer ${token}`).send({ ...testJob, status: 'Applied' });
-    await request(app).post('/api/jobs').set('Authorization', `Bearer ${token}`).send({ ...testJob, status: 'Interview' });
-    await request(app).post('/api/jobs').set('Authorization', `Bearer ${token}`).send({ ...testJob, status: 'Interview' });
+    await request(app)
+      .post('/api/jobs')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ ...testJob, status: 'Applied' });
+    await request(app)
+      .post('/api/jobs')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ ...testJob, status: 'Interview' });
+    await request(app)
+      .post('/api/jobs')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ ...testJob, status: 'Interview' });
 
     const res = await request(app).get('/api/jobs/stats').set('Authorization', `Bearer ${token}`);
     expect(res.statusCode).toBe(200);
@@ -171,10 +203,12 @@ describe('Jobs Endpoints', () => {
     const userAJobId = createRes.body.job._id;
 
     // User B registers
-    const userBRes = await request(app).post('/api/auth/register').send({
-      email: `other${Date.now()}@example.com`,
-      password: 'password123',
-    });
+    const userBRes = await request(app)
+      .post('/api/auth/register')
+      .send({
+        email: `other${Date.now()}@example.com`,
+        password: 'password123',
+      });
     const userBToken = userBRes.body.token;
 
     // User B cannot get User A's job

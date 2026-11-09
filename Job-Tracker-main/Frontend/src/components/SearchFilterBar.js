@@ -18,22 +18,54 @@ const SearchFilterBar = ({ filters, onFilterChange, total }) => {
         />
       </div>
 
-      <select id="filter-status" className="filter-select" value={filters.status || ''} onChange={set('status')}>
+      <select
+        id="filter-status"
+        className="filter-select"
+        value={filters.status || ''}
+        onChange={set('status')}
+      >
         <option value="">All statuses</option>
-        {JOB_STATUSES.map((s) => <option key={s} value={s}>{s}</option>)}
+        {JOB_STATUSES.map((s) => (
+          <option key={s} value={s}>
+            {s}
+          </option>
+        ))}
       </select>
 
-      <select id="filter-priority" className="filter-select" value={filters.priority || ''} onChange={set('priority')}>
+      <select
+        id="filter-priority"
+        className="filter-select"
+        value={filters.priority || ''}
+        onChange={set('priority')}
+      >
         <option value="">All priorities</option>
-        {PRIORITIES.map((p) => <option key={p} value={p}>{p}</option>)}
+        {PRIORITIES.map((p) => (
+          <option key={p} value={p}>
+            {p}
+          </option>
+        ))}
       </select>
 
-      <select id="filter-employment" className="filter-select" value={filters.employmentType || ''} onChange={set('employmentType')}>
+      <select
+        id="filter-employment"
+        className="filter-select"
+        value={filters.employmentType || ''}
+        onChange={set('employmentType')}
+      >
         <option value="">All types</option>
-        {EMPLOYMENT_TYPES.map((t) => <option key={t} value={t}>{t}</option>)}
+        {EMPLOYMENT_TYPES.map((t) => (
+          <option key={t} value={t}>
+            {t}
+          </option>
+        ))}
       </select>
 
-      <select id="filter-sort" className="filter-select" value={filters.sort || 'newest'} onChange={set('sort')}>
+      <select
+        id="filter-sort"
+        className="filter-select"
+        value={filters.sort || 'newest'}
+        onChange={set('sort')}
+      >
         <option value="newest">Newest first</option>
         <option value="oldest">Oldest first</option>
         <option value="deadline">By deadline</option>
@@ -41,7 +73,14 @@ const SearchFilterBar = ({ filters, onFilterChange, total }) => {
       </select>
 
       {total !== undefined && (
-        <span style={{ fontSize: 12, color: 'var(--text-muted)', whiteSpace: 'nowrap', marginLeft: 'auto' }}>
+        <span
+          style={{
+            fontSize: 12,
+            color: 'var(--text-muted)',
+            whiteSpace: 'nowrap',
+            marginLeft: 'auto',
+          }}
+        >
           {total} result{total !== 1 ? 's' : ''}
         </span>
       )}

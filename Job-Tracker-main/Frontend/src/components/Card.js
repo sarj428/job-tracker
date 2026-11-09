@@ -85,11 +85,11 @@ const Card = ({ task, fromColumn, onDelete, onEdit, onView }) => {
       <div className="card-meta">
         <span className={`badge ${statusBadgeClass[task.status] || ''}`}>{task.status}</span>
         <span className={`badge ${priorityBadgeClass[task.priority] || ''}`}>{task.priority}</span>
-        {task.appliedDate && (
-          <span className="card-meta-item">📅 {fmtDate(task.appliedDate)}</span>
-        )}
+        {task.appliedDate && <span className="card-meta-item">📅 {fmtDate(task.appliedDate)}</span>}
         {task.interview?.scheduled && (
-          <span className="card-meta-item" style={{ color: 'var(--warning)' }}>🎙 Interview</span>
+          <span className="card-meta-item" style={{ color: 'var(--warning)' }}>
+            🎙 Interview
+          </span>
         )}
       </div>
     </div>

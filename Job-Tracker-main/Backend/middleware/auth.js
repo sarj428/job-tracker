@@ -22,7 +22,9 @@ const auth = async (req, res, next) => {
   } catch (error) {
     // JsonWebTokenError, TokenExpiredError, etc.
     if (error.name === 'TokenExpiredError') {
-      return res.status(401).json({ success: false, message: 'Session expired, please log in again' });
+      return res
+        .status(401)
+        .json({ success: false, message: 'Session expired, please log in again' });
     }
     return res.status(401).json({ success: false, message: 'Please authenticate' });
   }

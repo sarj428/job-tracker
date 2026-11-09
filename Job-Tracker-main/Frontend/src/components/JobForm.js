@@ -66,8 +66,7 @@ const JobForm = ({ initialData, onSubmit, onClose, loading }) => {
     }
   }, [initialData]);
 
-  const set = (field) => (e) =>
-    setForm({ ...form, [field]: e.target.value });
+  const set = (field) => (e) => setForm({ ...form, [field]: e.target.value });
 
   const setInterview = (field) => (e) =>
     setForm({
@@ -117,7 +116,9 @@ const JobForm = ({ initialData, onSubmit, onClose, loading }) => {
       {/* ---- Basic info ---- */}
       <div className="form-row-2">
         <div className="form-group">
-          <label className="form-label" htmlFor="jf-company">Company Name *</label>
+          <label className="form-label" htmlFor="jf-company">
+            Company Name *
+          </label>
           <input
             id="jf-company"
             className={`form-input${errors.companyName ? ' form-input-error' : ''}`}
@@ -129,7 +130,9 @@ const JobForm = ({ initialData, onSubmit, onClose, loading }) => {
           {errors.companyName && <span className="form-error">⚠ {errors.companyName}</span>}
         </div>
         <div className="form-group">
-          <label className="form-label" htmlFor="jf-title">Job Title *</label>
+          <label className="form-label" htmlFor="jf-title">
+            Job Title *
+          </label>
           <input
             id="jf-title"
             className={`form-input${errors.jobTitle ? ' form-input-error' : ''}`}
@@ -144,7 +147,9 @@ const JobForm = ({ initialData, onSubmit, onClose, loading }) => {
 
       <div className="form-row-2">
         <div className="form-group">
-          <label className="form-label" htmlFor="jf-location">Location</label>
+          <label className="form-label" htmlFor="jf-location">
+            Location
+          </label>
           <input
             id="jf-location"
             className="form-input"
@@ -155,16 +160,27 @@ const JobForm = ({ initialData, onSubmit, onClose, loading }) => {
           />
         </div>
         <div className="form-group">
-          <label className="form-label" htmlFor="jf-type">Employment Type</label>
-          <select id="jf-type" className="form-select" value={form.employmentType} onChange={set('employmentType')}>
-            {EMPLOYMENT_TYPES.map((t) => <option key={t}>{t}</option>)}
+          <label className="form-label" htmlFor="jf-type">
+            Employment Type
+          </label>
+          <select
+            id="jf-type"
+            className="form-select"
+            value={form.employmentType}
+            onChange={set('employmentType')}
+          >
+            {EMPLOYMENT_TYPES.map((t) => (
+              <option key={t}>{t}</option>
+            ))}
           </select>
         </div>
       </div>
 
       <div className="form-row-2">
         <div className="form-group">
-          <label className="form-label" htmlFor="jf-url">Job Posting URL</label>
+          <label className="form-label" htmlFor="jf-url">
+            Job Posting URL
+          </label>
           <input
             id="jf-url"
             className={`form-input${errors.jobUrl ? ' form-input-error' : ''}`}
@@ -176,7 +192,9 @@ const JobForm = ({ initialData, onSubmit, onClose, loading }) => {
           {errors.jobUrl && <span className="form-error">⚠ {errors.jobUrl}</span>}
         </div>
         <div className="form-group">
-          <label className="form-label" htmlFor="jf-salary">Salary / Stipend</label>
+          <label className="form-label" htmlFor="jf-salary">
+            Salary / Stipend
+          </label>
           <input
             id="jf-salary"
             className="form-input"
@@ -191,30 +209,66 @@ const JobForm = ({ initialData, onSubmit, onClose, loading }) => {
       {/* ---- Status / Priority ---- */}
       <div className="form-row-3">
         <div className="form-group">
-          <label className="form-label" htmlFor="jf-status">Status</label>
-          <select id="jf-status" className="form-select" value={form.status} onChange={set('status')}>
-            {JOB_STATUSES.map((s) => <option key={s}>{s}</option>)}
+          <label className="form-label" htmlFor="jf-status">
+            Status
+          </label>
+          <select
+            id="jf-status"
+            className="form-select"
+            value={form.status}
+            onChange={set('status')}
+          >
+            {JOB_STATUSES.map((s) => (
+              <option key={s}>{s}</option>
+            ))}
           </select>
         </div>
         <div className="form-group">
-          <label className="form-label" htmlFor="jf-priority">Priority</label>
-          <select id="jf-priority" className="form-select" value={form.priority} onChange={set('priority')}>
-            {PRIORITIES.map((p) => <option key={p}>{p}</option>)}
+          <label className="form-label" htmlFor="jf-priority">
+            Priority
+          </label>
+          <select
+            id="jf-priority"
+            className="form-select"
+            value={form.priority}
+            onChange={set('priority')}
+          >
+            {PRIORITIES.map((p) => (
+              <option key={p}>{p}</option>
+            ))}
           </select>
         </div>
         <div className="form-group">
-          <label className="form-label" htmlFor="jf-applied">Applied Date</label>
-          <input id="jf-applied" className="form-input" type="date" value={form.appliedDate} onChange={set('appliedDate')} />
+          <label className="form-label" htmlFor="jf-applied">
+            Applied Date
+          </label>
+          <input
+            id="jf-applied"
+            className="form-input"
+            type="date"
+            value={form.appliedDate}
+            onChange={set('appliedDate')}
+          />
         </div>
       </div>
 
       <div className="form-row-2">
         <div className="form-group">
-          <label className="form-label" htmlFor="jf-deadline">Application Deadline</label>
-          <input id="jf-deadline" className="form-input" type="date" value={form.deadline} onChange={set('deadline')} />
+          <label className="form-label" htmlFor="jf-deadline">
+            Application Deadline
+          </label>
+          <input
+            id="jf-deadline"
+            className="form-input"
+            type="date"
+            value={form.deadline}
+            onChange={set('deadline')}
+          />
         </div>
         <div className="form-group">
-          <label className="form-label" htmlFor="jf-skills">Skills (comma-separated)</label>
+          <label className="form-label" htmlFor="jf-skills">
+            Skills (comma-separated)
+          </label>
           <input
             id="jf-skills"
             className="form-input"
@@ -227,7 +281,9 @@ const JobForm = ({ initialData, onSubmit, onClose, loading }) => {
       </div>
 
       <div className="form-group">
-        <label className="form-label" htmlFor="jf-notes">Notes</label>
+        <label className="form-label" htmlFor="jf-notes">
+          Notes
+        </label>
         <textarea
           id="jf-notes"
           className="form-textarea"
@@ -248,7 +304,18 @@ const JobForm = ({ initialData, onSubmit, onClose, loading }) => {
           onChange={setInterview('scheduled')}
           style={{ width: 16, height: 16, accentColor: 'var(--accent)', cursor: 'pointer' }}
         />
-        <label htmlFor="jf-interview-scheduled" className="form-label" style={{ margin: 0, cursor: 'pointer', textTransform: 'none', fontSize: 13, fontWeight: 600, color: 'var(--text-primary)' }}>
+        <label
+          htmlFor="jf-interview-scheduled"
+          className="form-label"
+          style={{
+            margin: 0,
+            cursor: 'pointer',
+            textTransform: 'none',
+            fontSize: 13,
+            fontWeight: 600,
+            color: 'var(--text-primary)',
+          }}
+        >
           Interview scheduled
         </label>
       </div>
@@ -257,23 +324,50 @@ const JobForm = ({ initialData, onSubmit, onClose, loading }) => {
         <>
           <div className="form-row-3">
             <div className="form-group">
-              <label className="form-label" htmlFor="jf-iv-date">Interview Date</label>
-              <input id="jf-iv-date" className="form-input" type="date" value={form.interview.date} onChange={setInterview('date')} />
+              <label className="form-label" htmlFor="jf-iv-date">
+                Interview Date
+              </label>
+              <input
+                id="jf-iv-date"
+                className="form-input"
+                type="date"
+                value={form.interview.date}
+                onChange={setInterview('date')}
+              />
             </div>
             <div className="form-group">
-              <label className="form-label" htmlFor="jf-iv-time">Interview Time</label>
-              <input id="jf-iv-time" className="form-input" type="time" value={form.interview.time} onChange={setInterview('time')} />
+              <label className="form-label" htmlFor="jf-iv-time">
+                Interview Time
+              </label>
+              <input
+                id="jf-iv-time"
+                className="form-input"
+                type="time"
+                value={form.interview.time}
+                onChange={setInterview('time')}
+              />
             </div>
             <div className="form-group">
-              <label className="form-label" htmlFor="jf-iv-type">Interview Type</label>
-              <select id="jf-iv-type" className="form-select" value={form.interview.type} onChange={setInterview('type')}>
+              <label className="form-label" htmlFor="jf-iv-type">
+                Interview Type
+              </label>
+              <select
+                id="jf-iv-type"
+                className="form-select"
+                value={form.interview.type}
+                onChange={setInterview('type')}
+              >
                 <option value="">Select type</option>
-                {INTERVIEW_TYPES.map((t) => <option key={t}>{t}</option>)}
+                {INTERVIEW_TYPES.map((t) => (
+                  <option key={t}>{t}</option>
+                ))}
               </select>
             </div>
           </div>
           <div className="form-group">
-            <label className="form-label" htmlFor="jf-iv-notes">Interview Notes</label>
+            <label className="form-label" htmlFor="jf-iv-notes">
+              Interview Notes
+            </label>
             <textarea
               id="jf-iv-notes"
               className="form-textarea"
@@ -291,7 +385,7 @@ const JobForm = ({ initialData, onSubmit, onClose, loading }) => {
           Cancel
         </button>
         <button type="submit" className="btn btn-primary" disabled={loading}>
-          {loading ? 'Saving…' : (initialData ? 'Save changes' : 'Add application')}
+          {loading ? 'Saving…' : initialData ? 'Save changes' : 'Add application'}
         </button>
       </div>
     </form>

@@ -5,7 +5,15 @@ import Modal from './Modal';
  * Reusable confirm-before-delete dialog.
  * Usage: <ConfirmDialog isOpen={...} onConfirm={...} onClose={...} />
  */
-const ConfirmDialog = ({ isOpen, onClose, onConfirm, title = 'Are you sure?', message, confirmLabel = 'Delete', loading = false }) => {
+const ConfirmDialog = ({
+  isOpen,
+  onClose,
+  onConfirm,
+  title = 'Are you sure?',
+  message,
+  confirmLabel = 'Delete',
+  loading = false,
+}) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="sm" title="">
       <div className="confirm-body">

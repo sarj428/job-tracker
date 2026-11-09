@@ -13,9 +13,16 @@ const Modal = ({ isOpen, onClose, title, size = 'md', children, footer }) => {
 
   return (
     <div className="modal-overlay" onClick={handleOverlayClick}>
-      <div className={`modal-box modal-box-${size}`} role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div
+        className={`modal-box modal-box-${size}`}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-title"
+      >
         <div className="modal-header">
-          <span className="modal-title" id="modal-title">{title}</span>
+          <span className="modal-title" id="modal-title">
+            {title}
+          </span>
           <button
             className="btn btn-ghost btn-icon"
             onClick={onClose}

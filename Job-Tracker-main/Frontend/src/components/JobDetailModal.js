@@ -34,22 +34,42 @@ const JobDetailModal = ({ job, onEdit, onDelete, onClose }) => {
     <div>
       {/* Company + title */}
       <div style={{ marginBottom: 20 }}>
-        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12 }}>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'flex-start',
+            justifyContent: 'space-between',
+            gap: 12,
+          }}
+        >
           <div>
-            <div style={{ fontSize: 22, fontWeight: 700, color: 'var(--text-primary)', marginBottom: 4 }}>
+            <div
+              style={{
+                fontSize: 22,
+                fontWeight: 700,
+                color: 'var(--text-primary)',
+                marginBottom: 4,
+              }}
+            >
               {job.companyName}
             </div>
-            <div style={{ fontSize: 15, color: 'var(--text-secondary)', marginBottom: 10 }}>{job.jobTitle}</div>
+            <div style={{ fontSize: 15, color: 'var(--text-secondary)', marginBottom: 10 }}>
+              {job.jobTitle}
+            </div>
           </div>
           <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexShrink: 0 }}>
             <span className={`badge ${statusBadgeClass[job.status] || ''}`}>{job.status}</span>
-            <span className={`badge ${priorityBadgeClass[job.priority] || ''}`}>{job.priority}</span>
+            <span className={`badge ${priorityBadgeClass[job.priority] || ''}`}>
+              {job.priority}
+            </span>
           </div>
         </div>
 
         {/* Action buttons */}
         <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-          <button className="btn btn-primary btn-sm" onClick={onEdit}>✎ Edit</button>
+          <button className="btn btn-primary btn-sm" onClick={onEdit}>
+            ✎ Edit
+          </button>
           {job.jobUrl && (
             <a
               href={job.jobUrl}
@@ -60,7 +80,9 @@ const JobDetailModal = ({ job, onEdit, onDelete, onClose }) => {
               ↗ Open Job Posting
             </a>
           )}
-          <button className="btn btn-danger btn-sm" onClick={onDelete}>Delete</button>
+          <button className="btn btn-danger btn-sm" onClick={onDelete}>
+            Delete
+          </button>
         </div>
       </div>
 
@@ -99,7 +121,11 @@ const JobDetailModal = ({ job, onEdit, onDelete, onClose }) => {
         <div className="detail-field">
           <div className="detail-label">Skills</div>
           <div className="skills-chips">
-            {job.skills.map((s, i) => <span key={i} className="skill-chip">{s}</span>)}
+            {job.skills.map((s, i) => (
+              <span key={i} className="skill-chip">
+                {s}
+              </span>
+            ))}
           </div>
         </div>
       )}
@@ -108,7 +134,10 @@ const JobDetailModal = ({ job, onEdit, onDelete, onClose }) => {
       {job.notes && (
         <div className="detail-field">
           <div className="detail-label">Notes</div>
-          <div className="detail-value" style={{ whiteSpace: 'pre-wrap', lineHeight: 1.6, color: 'var(--text-secondary)' }}>
+          <div
+            className="detail-value"
+            style={{ whiteSpace: 'pre-wrap', lineHeight: 1.6, color: 'var(--text-secondary)' }}
+          >
             {job.notes}
           </div>
         </div>
@@ -118,7 +147,9 @@ const JobDetailModal = ({ job, onEdit, onDelete, onClose }) => {
       {hasInterview && (
         <>
           <hr className="divider" />
-          <div className="detail-label" style={{ marginBottom: 12 }}>Interview Details</div>
+          <div className="detail-label" style={{ marginBottom: 12 }}>
+            Interview Details
+          </div>
           <div className="detail-grid-2">
             <div className="detail-field">
               <div className="detail-label">Date</div>
@@ -136,7 +167,10 @@ const JobDetailModal = ({ job, onEdit, onDelete, onClose }) => {
           {job.interview.notes && (
             <div className="detail-field">
               <div className="detail-label">Interview Notes</div>
-              <div className="detail-value" style={{ whiteSpace: 'pre-wrap', color: 'var(--text-secondary)' }}>
+              <div
+                className="detail-value"
+                style={{ whiteSpace: 'pre-wrap', color: 'var(--text-secondary)' }}
+              >
                 {job.interview.notes}
               </div>
             </div>

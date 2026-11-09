@@ -1,22 +1,52 @@
 import React, { useEffect, useState } from 'react';
-import {
-  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
-} from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import { getJobStats } from '../services/jobService';
 import { STATUS_COLORS } from '../utils/constants';
 
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 const statCards = [
-  { key: 'total',        label: 'Total Applications', icon: '📋', color: '#6366f1', bg: 'rgba(99,102,241,0.12)' },
-  { key: 'thisMonth',    label: 'This Month',          icon: '📅', color: '#3b82f6', bg: 'rgba(59,130,246,0.12)' },
-  { key: 'Interview',    label: 'Interviews',          icon: '🎙', color: '#f59e0b', bg: 'rgba(245,158,11,0.12)' },
-  { key: 'Offer',        label: 'Offers',              icon: '🎉', color: '#10b981', bg: 'rgba(16,185,129,0.12)' },
-  { key: 'Rejected',     label: 'Rejected',            icon: '✕',  color: '#ef4444', bg: 'rgba(239,68,68,0.12)'  },
-  { key: 'offerRate',    label: 'Offer Rate',          icon: '%',  color: '#8b5cf6', bg: 'rgba(139,92,246,0.12)', suffix: '%' },
+  {
+    key: 'total',
+    label: 'Total Applications',
+    icon: '📋',
+    color: '#6366f1',
+    bg: 'rgba(99,102,241,0.12)',
+  },
+  {
+    key: 'thisMonth',
+    label: 'This Month',
+    icon: '📅',
+    color: '#3b82f6',
+    bg: 'rgba(59,130,246,0.12)',
+  },
+  {
+    key: 'Interview',
+    label: 'Interviews',
+    icon: '🎙',
+    color: '#f59e0b',
+    bg: 'rgba(245,158,11,0.12)',
+  },
+  { key: 'Offer', label: 'Offers', icon: '🎉', color: '#10b981', bg: 'rgba(16,185,129,0.12)' },
+  { key: 'Rejected', label: 'Rejected', icon: '✕', color: '#ef4444', bg: 'rgba(239,68,68,0.12)' },
+  {
+    key: 'offerRate',
+    label: 'Offer Rate',
+    icon: '%',
+    color: '#8b5cf6',
+    bg: 'rgba(139,92,246,0.12)',
+    suffix: '%',
+  },
 ];
 
-const pipelineStatuses = ['Saved', 'Applied', 'Online Assessment', 'Interview', 'Offer', 'Rejected'];
+const pipelineStatuses = [
+  'Saved',
+  'Applied',
+  'Online Assessment',
+  'Interview',
+  'Offer',
+  'Rejected',
+];
 
 const Dashboard = () => {
   const [stats, setStats] = useState(null);
@@ -72,7 +102,8 @@ const Dashboard = () => {
               {card.icon}
             </div>
             <div className="stat-value">
-              {getStatValue(card)}{card.suffix || ''}
+              {getStatValue(card)}
+              {card.suffix || ''}
             </div>
             <div className="stat-label">{card.label}</div>
           </div>
@@ -119,8 +150,18 @@ const Dashboard = () => {
           ) : (
             <ResponsiveContainer width="100%" height={220}>
               <BarChart data={monthlyChartData} margin={{ top: 4, right: 8, left: -20, bottom: 0 }}>
-                <XAxis dataKey="name" tick={{ fontSize: 11, fill: '#64748b' }} axisLine={false} tickLine={false} />
-                <YAxis tick={{ fontSize: 11, fill: '#64748b' }} axisLine={false} tickLine={false} allowDecimals={false} />
+                <XAxis
+                  dataKey="name"
+                  tick={{ fontSize: 11, fill: '#64748b' }}
+                  axisLine={false}
+                  tickLine={false}
+                />
+                <YAxis
+                  tick={{ fontSize: 11, fill: '#64748b' }}
+                  axisLine={false}
+                  tickLine={false}
+                  allowDecimals={false}
+                />
                 <Tooltip
                   contentStyle={{
                     background: '#1a1d27',
@@ -167,9 +208,7 @@ const Dashboard = () => {
                     <div className="interview-role">{iv.jobTitle}</div>
                     <div className="interview-type">{iv.interview?.type || ''}</div>
                   </div>
-                  {iv.interview?.time && (
-                    <div className="interview-time">{iv.interview.time}</div>
-                  )}
+                  {iv.interview?.time && <div className="interview-time">{iv.interview.time}</div>}
                 </div>
               );
             })}
