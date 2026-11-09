@@ -2,11 +2,22 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
 const swaggerJsDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 require('dotenv').config();
 
 const errorHandler = require('./middleware/errorHandler');
+
+// ── Startup guard: fail fast if critical env vars are absent or weak ──────────
+if (!process.env.JWT_SECRET) {
+  console.error('FATAL: JWT_SECRET environment variable is not set. Exiting.');
+  process.exit(1);
+}
+if (process.env.NODE_ENV === 'production' && process.env.JWT_SECRET.length < 32) {
+  console.error('FATAL: JWT_SECRET must be at least 32 characters in production. Exiting.');
+  process.exit(1);
+}
 
 const app = express();
 
@@ -32,6 +43,27 @@ app.use(cors({
 
 app.use(express.json({ limit: '10kb' }));
 
+// ── Rate limiting ─────────────────────────────────────────────────────────────
+// Auth routes: 10 requests per 15-minute window per IP
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { success: false, message: 'Too many requests, please try again later.' },
+  skip: () => process.env.NODE_ENV === 'test',
+});
+
+// General API: 200 requests per 15-minute window per IP
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 200,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { success: false, message: 'Too many requests, please try again later.' },
+  skip: () => process.env.NODE_ENV === 'test',
+});
+
 // Request logger — dev only
 if (process.env.NODE_ENV !== 'production') {
   app.use((req, res, next) => {
@@ -42,6 +74,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 // Database
 if (process.env.NODE_ENV !== 'test') {
+  mongoose.set('strictQuery', false);
   mongoose
     .connect(process.env.MONGODB_URI)
     .then(() => console.log('Connected to MongoDB'))
@@ -50,6 +83,18 @@ if (process.env.NODE_ENV !== 'test') {
       process.exit(1);
     });
 }
+
+// ── Health check (no auth, no rate limit) ────────────────────────────────────
+app.get('/api/health', (req, res) => {
+  const dbState = ['disconnected', 'connected', 'connecting', 'disconnecting'];
+  res.json({
+    success: true,
+    status: 'ok',
+    db: dbState[mongoose.connection.readyState] || 'unknown',
+    uptime: Math.floor(process.uptime()),
+    timestamp: new Date().toISOString(),
+  });
+});
 
 // Routes
 const swaggerOptions = {
@@ -60,7 +105,7 @@ const swaggerOptions = {
       version: '1.0.0',
       description: 'API documentation for CareerTrack',
     },
-    servers: [{ url: 'http://localhost:5000' }],
+    servers: [{ url: process.env.API_BASE_URL || 'http://localhost:5000' }],
     components: {
       securitySchemes: {
         bearerAuth: { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
@@ -72,8 +117,8 @@ const swaggerOptions = {
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
-app.use('/api/auth', require('./routes/auth'));
-app.use('/api/jobs', require('./routes/jobs'));
+app.use('/api/auth', authLimiter, require('./routes/auth'));
+app.use('/api/jobs', apiLimiter, require('./routes/jobs'));
 
 // 404 handler for unknown routes
 app.use((req, res) => {

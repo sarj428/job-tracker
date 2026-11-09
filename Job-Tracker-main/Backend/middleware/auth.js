@@ -3,23 +3,28 @@ const User = require('../models/User');
 
 const auth = async (req, res, next) => {
   try {
-    const token = req.header('Authorization')?.replace('Bearer ', '');
-    if (!token) {
-      throw new Error();
+    const authHeader = req.header('Authorization');
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return res.status(401).json({ success: false, message: 'Please authenticate' });
     }
 
+    const token = authHeader.replace('Bearer ', '');
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findById(decoded.userId);
 
     if (!user) {
-      throw new Error();
+      return res.status(401).json({ success: false, message: 'Please authenticate' });
     }
 
     req.user = user;
     req.token = token;
     next();
   } catch (error) {
-    res.status(401).json({ message: 'Please authenticate' });
+    // JsonWebTokenError, TokenExpiredError, etc.
+    if (error.name === 'TokenExpiredError') {
+      return res.status(401).json({ success: false, message: 'Session expired, please log in again' });
+    }
+    return res.status(401).json({ success: false, message: 'Please authenticate' });
   }
 };
 
