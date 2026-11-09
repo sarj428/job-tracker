@@ -37,13 +37,34 @@ describe('Auth Endpoints', () => {
     expect(res.body.token).toBeDefined();
   });
 
-  it('should fail to login with wrong password', async () => {
+  it('should fail to login with wrong password and return generic error message', async () => {
     await request(app).post('/api/auth/register').send(testUser);
     const res = await request(app).post('/api/auth/login').send({
       email: testUser.email,
       password: 'wrongpassword',
     });
     expect(res.statusCode).toBe(401);
+    expect(res.body.success).toBe(false);
+    expect(res.body.message).toBe('Invalid email or password');
+  });
+
+  it('should fail to login with unknown email and return identical generic error message', async () => {
+    const res = await request(app).post('/api/auth/login').send({
+      email: 'nonexistent@example.com',
+      password: 'password123',
+    });
+    expect(res.statusCode).toBe(401);
+    expect(res.body.success).toBe(false);
+    expect(res.body.message).toBe('Invalid email or password');
+  });
+
+  it('should reject NoSQL operator injection attempt on login with 4xx', async () => {
+    const res = await request(app).post('/api/auth/login').send({
+      email: { $ne: null },
+      password: 'x',
+    });
+    expect(res.statusCode).toBeGreaterThanOrEqual(400);
+    expect(res.statusCode).toBeLessThan(500);
     expect(res.body.success).toBe(false);
   });
 
